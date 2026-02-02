@@ -52,6 +52,7 @@
             transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             margin: 0;
             line-height: 1.2;
+            z-index: 200;
         }
 
         .buttons {
@@ -90,7 +91,7 @@
             pointer-events: none;
         }
 
-        /* Poze plutitoare - Dimensiune redusa (100px) */
+        /* Poze plutitoare - Dimensiune 100px */
         .floating-img {
             position: absolute;
             width: 100px; 
@@ -121,7 +122,7 @@
 </head>
 <body>
 
-    <div id="statusMsg">BYE BYE!</div>
+    <div id="statusMsg">NO MORE RED BUTTON FOR YOU!</div>
 
     <img id="gifTL" class="corner-gif top-left" src="https://i.pinimg.com/originals/2b/73/10/2b73109c6c954c7138cb050f574d81b6.gif">
     <img id="gifTR" class="corner-gif top-right" src="https://i.pinimg.com/originals/8f/31/1f/8f311face54330563435afb4faebba2b.gif">
@@ -180,8 +181,8 @@
 
         yesBtn.addEventListener('click', () => {
             btnContainer.style.display = 'none';
-            // Scrisul final mai mic pentru a se incadra in inima
-            questionText.style.fontSize = "3.2rem";
+            // Scrisul final mai mic (2.5rem) pentru a oferi mai mult spatiu
+            questionText.style.fontSize = "2.5rem";
             questionText.innerHTML = "YAAAAY! ❤️<br>I LOVE YOU, EVA!";
             cornerGifs.forEach(el => el.style.display = 'none');
             createHeartGallery();
@@ -192,6 +193,9 @@
             const images = [];
             const centerX = window.innerWidth / 2;
             const centerY = window.innerHeight / 2;
+            
+            // Shift vertical moderat pentru a nu taia partea de sus
+            const verticalShift = -40; 
 
             for (let i = 1; i <= numImages; i++) {
                 const img = document.createElement('img');
@@ -207,19 +211,20 @@
                     const x = 16 * Math.pow(Math.sin(t), 3);
                     const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
                     img.style.opacity = '1';
-                    // Multiplicator redus (28) pentru o inima mai stransa
-                    img.style.left = `${centerX + x * 28 - 50}px`; 
-                    img.style.top = `${centerY + y * 28 - 50}px`;
+                    // Am strans inima (multiplicator 24 in loc de 28/45)
+                    img.style.left = `${centerX + x * 24 - 50}px`; 
+                    img.style.top = `${centerY + verticalShift + y * 24 - 50}px`;
                 });
             }
 
             function setOrbit() {
                 images.forEach((img, i) => {
                     const angle = (i / numImages) * Math.PI * 2;
-                    const radiusX = 420; 
-                    const radiusY = 240;
+                    // Orbita redusa si ea pentru a ramane in cadru
+                    const radiusX = 380; 
+                    const radiusY = 220;
                     img.style.left = `${centerX + Math.cos(angle) * radiusX - 50}px`;
-                    img.style.top = `${centerY + Math.sin(angle) * radiusY - 50}px`;
+                    img.style.top = `${centerY + verticalShift + Math.sin(angle) * radiusY - 50}px`;
                 });
             }
 
@@ -233,5 +238,4 @@
         }
     </script>
 </body>
-
 </html>
