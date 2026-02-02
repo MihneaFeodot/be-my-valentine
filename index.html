@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine's for Eva</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #fff0f3;
+            font-family: 'Pacifico', cursive;
+            overflow: hidden;
+            text-align: center;
+            position: relative;
+        }
+
+        /* GIF-urile din colturi */
+        .corner-gif {
+            position: absolute;
+            width: 300px; 
+            height: auto;
+            z-index: 1;
+            transition: all 0.5s ease;
+            pointer-events: none;
+        }
+
+        .top-left { top: -50px; left: -50px; }
+        .top-right { top: -50px; right: -50px; }
+        .bottom-left { bottom: -50px; left: -50px; }
+        .bottom-right { bottom: -50px; right: -50px; }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        h1 {
+            color: #ff4d6d;
+            font-size: 2.4rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .buttons {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+            min-height: 250px;
+            transition: gap 0.3s ease;
+        }
+
+        button {
+            padding: 10px 22px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 5px 12px rgba(0,0,0,0.15);
+            font-family: "Times New Roman", Times, serif;
+            font-size: 1.2rem;
+            position: relative;
+        }
+
+        #yesBtn { background-color: #28a745; z-index: 25; }
+        #noBtn { background-color: #dc3545; z-index: 20; }
+
+        @keyframes chaoticExit {
+            0% { transform: scale(0.2) translate(0, 0) rotate(0deg); }
+            100% { transform: scale(0.2) translate(150vw, -150vh) rotate(720deg); }
+        }
+
+        .fly-away {
+            animation: chaoticExit 2.5s forwards ease-in-out;
+            pointer-events: none;
+        }
+
+        /* Poze plutitoare - Dimensiune redusa (100px) */
+        .floating-img {
+            position: absolute;
+            width: 100px; 
+            height: 100px; 
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid #ff4d6d;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 100;
+            transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+        }
+
+        #statusMsg {
+            position: fixed;
+            top: 15%;
+            color: #dc3545;
+            font-size: 1.4rem;
+            font-weight: bold;
+            display: none;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            z-index: 120;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="statusMsg">NO MORE RED BUTTON FOR YOU!</div>
+
+    <img id="gifTL" class="corner-gif top-left" src="https://i.pinimg.com/originals/2b/73/10/2b73109c6c954c7138cb050f574d81b6.gif">
+    <img id="gifTR" class="corner-gif top-right" src="https://i.pinimg.com/originals/8f/31/1f/8f311face54330563435afb4faebba2b.gif">
+    <img id="gifBL" class="corner-gif bottom-left" src="https://i.pinimg.com/originals/3d/fc/73/3dfc73fe131efc519739eba1388ee459.gif">
+    <img id="gifBR" class="corner-gif bottom-right" src="https://i.pinimg.com/originals/d2/f7/90/d2f790978f11b5bb2f1ff38124a9a47a.gif">
+
+    <div class="container">
+        <h1 id="questionText">Would you like to be my valentine, Eva?</h1>
+        <div class="buttons" id="btnContainer">
+            <button id="yesBtn">YES</button>
+            <button id="noBtn">NO</button>
+        </div>
+    </div>
+
+    <script>
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const btnContainer = document.getElementById('btnContainer');
+        const questionText = document.getElementById('questionText');
+        const statusMsg = document.getElementById('statusMsg');
+        const cornerGifs = document.querySelectorAll('.corner-gif');
+
+        const noTexts = ["WHY BABY?", "COME ON :(((", "I WILL TREAT YOU RIGHT!", "WHY U HATE ME?", "YOU DONT LOVE ME..."];
+
+        let clickCount = 0;
+        let yesScale = 1;
+        let noScale = 1;
+        let currentGap = 25;
+
+        noBtn.addEventListener('click', () => {
+            if (clickCount < noTexts.length) {
+                noBtn.innerText = noTexts[clickCount];
+                yesScale += 0.5; 
+                yesBtn.style.transform = `scale(${yesScale})`;
+                noScale -= 0.15;
+                if (noScale < 0.25) noScale = 0.25; 
+                noBtn.style.transform = `scale(${noScale})`;
+                
+                currentGap += 45; 
+                btnContainer.style.gap = `${currentGap}px`;
+                clickCount++;
+
+                if (clickCount === 2) {
+                    cornerGifs[0].src = "https://i.pinimg.com/originals/86/2e/8c/862e8c07cf761d7170fc8957b10dd04c.gif";
+                    cornerGifs[1].src = "https://i.pinimg.com/originals/96/cd/c3/96cdc3a28034869db6ed346d256798c5.gif";
+                    cornerGifs[2].src = "https://i.pinimg.com/originals/83/f2/44/83f24496bdcde5dad0ce32b07422d754.gif";
+                    cornerGifs[3].src = "https://i.pinimg.com/1200x/df/d4/58/dfd4584f57069e09208f05d2bdb87d9d.jpg";
+                    cornerGifs.forEach(el => el.style.width = "400px"); 
+                }
+            } else {
+                statusMsg.style.display = 'block';
+                noBtn.classList.add('fly-away');
+                setTimeout(() => { noBtn.style.display = 'none'; statusMsg.style.display = 'none'; }, 2500);
+            }
+        });
+
+        yesBtn.addEventListener('click', () => {
+            btnContainer.style.display = 'none';
+            // Scrisul final mai mic pentru a se incadra in inima
+            questionText.style.fontSize = "3.2rem";
+            questionText.innerHTML = "YAAAAY! ❤️<br>I LOVE YOU, EVA!";
+            cornerGifs.forEach(el => el.style.display = 'none');
+            createHeartGallery();
+        });
+
+        function createHeartGallery() {
+            const numImages = 15;
+            const images = [];
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+
+            for (let i = 1; i <= numImages; i++) {
+                const img = document.createElement('img');
+                img.src = `imagini/${i}.jpeg`;
+                img.className = 'floating-img';
+                document.body.appendChild(img);
+                images.push(img);
+            }
+
+            function setHeartShape() {
+                images.forEach((img, i) => {
+                    const t = (i / numImages) * Math.PI * 2;
+                    const x = 16 * Math.pow(Math.sin(t), 3);
+                    const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+                    img.style.opacity = '1';
+                    // Multiplicator redus (28) pentru o inima mai stransa
+                    img.style.left = `${centerX + x * 28 - 50}px`; 
+                    img.style.top = `${centerY + y * 28 - 50}px`;
+                });
+            }
+
+            function setOrbit() {
+                images.forEach((img, i) => {
+                    const angle = (i / numImages) * Math.PI * 2;
+                    const radiusX = 420; 
+                    const radiusY = 240;
+                    img.style.left = `${centerX + Math.cos(angle) * radiusX - 50}px`;
+                    img.style.top = `${centerY + Math.sin(angle) * radiusY - 50}px`;
+                });
+            }
+
+            setHeartShape();
+
+            let isHeart = true;
+            setInterval(() => {
+                isHeart = !isHeart;
+                if (isHeart) setHeartShape(); else setOrbit();
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
